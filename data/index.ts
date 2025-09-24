@@ -42,7 +42,7 @@ export const gridItems = [
   },
   {
     id: 6,
-    title: "Free consultation. Fair pricing, No BS!",
+    title: "Free consultation. Fair pricing. No bs.",
     description: "Dream it. We'll build it.",
     className: "lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",

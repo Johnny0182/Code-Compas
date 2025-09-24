@@ -57,8 +57,8 @@ const Hero = () => {
           />
 
           <p className="text-center md:tracking-wider mb-4 text-sm md:text-lg lg:text-2xl">
-            Expert web development team delivering innovative solutions for
-            modern businesses.
+            Expert web development team delivering solutions for modern
+            businesses.
           </p>
 
           <a href="#about">
