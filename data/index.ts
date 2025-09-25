@@ -7,29 +7,6 @@ export const navItems = [
 
 export const gridItems = [
   {
-    id: 2,
-    title: "Any timezone. Any industry. Always available 🤠",
-    description: "",
-    className: "lg:col-span-2 md:col-span-3 md:row-span-2",
-    imgClassName: "",
-    titleClassName: "justify-start",
-    img: "",
-    spareImg: "",
-  },
-  {
-    id: 3,
-    description: "Mission Statement (Code Compas 🤠):",
-    title:
-      "We close the technology gap with affordable, scalable, and beautifully designed solutions. We build custom apps, software, automations, and AI agents. Helping entrepreneurs, small businesses, nonprofits, and mission-driven organizations to thrive.",
-    className: "lg:col-span-2 md:col-span-3 md:row-span-2",
-    imgClassName: "",
-    titleClassName: "justify-center md:justify-start lg:justify-center",
-    descClassName:
-      "mt-2 text-sm sm:text-[15px] md:text-base lg:text-lg leading-6 sm:leading-7 lg:leading-8 text-white/90 max-w-[68ch] [text-wrap:pretty] hyphens-auto",
-    img: "",
-    spareImg: "",
-  },
-  {
     id: 5,
     title:
       "Currently serving 20+ businesses. If you can think it, we can code it. Custom apps, software, websites, automations, and digital marketing.",
@@ -41,9 +18,32 @@ export const gridItems = [
     spareImg: "/grid.svg",
   },
   {
+    id: 3,
+    description: "Mission Statement:",
+    title:
+      "We build custom digital solutions for businesses, nonprofits, and anyone with a vision. We love our community, keep pricing fair, and help organizations get powerful tech without breaking the bank.",
+    className: "lg:col-span-2 md:col-span-3 md:row-span-2",
+    imgClassName: "",
+    titleClassName: "justify-center md:justify-start lg:justify-center",
+    descClassName:
+      "mt-2 text-sm sm:text-[15px] md:text-base lg:text-lg leading-6 sm:leading-7 lg:leading-8 text-white/90 max-w-[68ch] [text-wrap:pretty] hyphens-auto",
+    img: "",
+    spareImg: "",
+  },
+  {
+    id: 2,
+    title: "We work across every timezone and every industry 🌐",
+    description: "",
+    className: "lg:col-span-2 md:col-span-3 md:row-span-2",
+    imgClassName: "",
+    titleClassName: "justify-start",
+    img: "",
+    spareImg: "",
+  },
+  {
     id: 6,
-    title: "Free consultation. Fair pricing. No bs.",
-    description: "Dream it. We'll build it.",
+    title: "Free consultation. Fair pricing. No fluff.",
+    description: "You dream it, and we'll build it.",
     className: "lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
     titleClassName: "justify-center md:max-w-full max-w-60 text-center",
