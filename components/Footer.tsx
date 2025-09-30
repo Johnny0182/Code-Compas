@@ -29,6 +29,7 @@ const Footer = () => {
             title="Let's get in touch"
             icon={<FaLocationArrow />}
             position="right"
+            containerClassName="mt-6 md:mt-10 md:w-60"
           />
         </a>
       </div>

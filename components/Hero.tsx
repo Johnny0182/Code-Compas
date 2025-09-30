@@ -61,13 +61,24 @@ const Hero = () => {
             Businesses Grow.
           </p>
 
-          <a href="#about">
-            <MagicButton
-              title="Show our work"
-              icon={<FaLocationArrow />}
-              position="right"
-            />
-          </a>
+          <div className="mt-6 md:mt-10 flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-4">
+            <a href="#about" className="w-full sm:w-auto">
+              <MagicButton
+                title="Show our work"
+                icon={<FaLocationArrow />}
+                position="right"
+                containerClassName="sm:w-auto md:w-60"
+              />
+            </a>
+            <a href="#contact" className="w-full sm:w-auto">
+              <MagicButton
+                title="Get a free quote"
+                icon={<FaLocationArrow />}
+                position="right"
+                containerClassName="sm:w-auto md:w-60"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </div>
