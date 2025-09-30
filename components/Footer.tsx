@@ -3,132 +3,73 @@ import { FaArrowRightLong, FaLocationArrow } from "react-icons/fa6";
 import { socialMedia } from "@/data";
 import MagicButton from "./MagicButton";
 
-const pricingCategories = [
+const offerings = [
   {
     title: "Websites",
     icon: "🌐",
-    packages: [
-      {
-        name: "1-Page Website",
-        price: "$750 – $900",
-        description: "Perfect landing page to get online quickly.",
-      },
-      {
-        name: "3–5 Page Business Website",
-        price: "$1,500 – $2,500",
-        description: "Includes Home, Services, About, Contact, and Gallery pages.",
-      },
-      {
-        name: "Custom Website (1–3 Advanced Features)",
-        price: "$5,000 – $8,500",
-        description:
-          "Booking automation, calendar sync, customer accounts, marketing integrations, file uploads, rewards, and more.",
-      },
-    ],
-    notes: [
-      "Maintenance: $250–$400/year",
-      "Changes: $100/hr",
+    highlights: [
+      "1-Page Website (simple landing page)",
+      "3–5 Page Business Website (Home, Services, About, Contact, Gallery)",
+      "Custom Websites with advanced features (bookings, accounts, email marketing, rewards, automations)",
     ],
   },
   {
     title: "Mobile Apps",
     icon: "📱",
-    packages: [
-      {
-        name: "Simple App",
-        price: "$3,000 – $5,500",
-        description:
-          "Transforms your website into iOS & Android apps with push notifications and reminders.",
-      },
-      {
-        name: "Business App (Advanced Features)",
-        price: "$6,000 – $9,500",
-        description:
-          "Customer login, scheduling, booking, and automated SMS/email reminders.",
-      },
-      {
-        name: "E-Commerce / Food Ordering App",
-        price: "$10,000 – $14,000",
-        description:
-          "Ordering, cart system, payment processing, loyalty rewards, and real-time order tracking.",
-      },
+    highlights: [
+      "Simple App (website-to-app with notifications & reminders)",
+      "Business App (customer login, scheduling, SMS/email reminders)",
+      "E-Commerce / Food Ordering App (ordering, payments, loyalty, tracking)",
     ],
-    notes: ["Maintenance: $250–$500/year depending on system size"],
   },
   {
     title: "Custom Software",
     icon: "⚙️",
-    packages: [
-      {
-        name: "Excel Automation Tools",
-        price: "$300 – $1,200",
-        description:
-          "Automated Excel or Google Sheets dashboards for financial tracking, payroll, reporting, and inventory.",
-      },
-      {
-        name: "Custom Software Projects",
-        price: "Starting at $5,000",
-        description:
-          "Tailored workflow software that goes beyond websites and apps.",
-      },
+    highlights: [
+      "Excel Automations (dashboards, payroll, inventory tracking)",
+      "Tailored business software solutions",
     ],
-    notes: ["Changes: $100/hr"],
   },
   {
     title: "POS Systems & Automation",
     icon: "💳",
-    packages: [
-      {
-        name: "Basic POS Software Package",
-        price: "$5,000+",
-        description:
-          "Software for one POS terminal plus on-site physical setup. App connectivity available separately.",
-      },
-      {
-        name: "Worker + Customer POS Package",
-        price: "Starting at $15,000",
-        description:
-          "Worker terminal plus multiple customer ordering tablets—scales with your floor plan.",
-      },
-      {
-        name: "Premium POS + Robotics Package",
-        price: "Starting at $30,000",
-        description:
-          "Custom POS, table management, two service robots, and full website + app integration.",
-      },
-    ],
-    notes: [
-      "Maintenance: $350–$500/year",
-      "Changes: $100/hr",
-      "Market note: Hardware POS machines typically cost $300–$1,500 each. Service robots range $2,000–$4,000 before branding.",
+    highlights: [
+      "Basic POS Software + POS Terminal",
+      "Worker + Customer POS Package (customer ordering tablets)",
+      "Premium POS + Robotics (custom POS, seating software, 2 service robots, table-side ordering app)",
     ],
   },
   {
     title: "Takeout Restaurant Website",
     icon: "🍽️",
-    packages: [
-      {
-        name: "Full Takeout Experience",
-        price: "Starting at $2,000",
-        description:
-          "Online ordering, user accounts, loyalty rewards, promo codes, secure sign-in, and marketing banners.",
-      },
+    highlights: [
+      "Online ordering, customer accounts, rewards, promo codes, ads, secure sign-in",
+      "Scales with your business needs",
     ],
-    notes: [
-      "Maintenance: $400/year",
-      "Transaction Fee: 2.5% per takeout order",
+  },
+  {
+    title: "Trade & Service Business Websites",
+    icon: "🛠️",
+    highlights: [
+      "Booking & scheduling systems that sync with your calendar",
+      "Client request forms & automated follow-ups",
+      "Lead capture & CRM-style tracking",
+      "Service galleries & customer testimonials to build trust",
+      "Bilingual support (English & Español) to reach more customers",
+    ],
+  },
+  {
+    title: "Add-Ons",
+    icon: "🎨",
+    highlights: [
+      "Branding & logos",
+      "Business cards, flyers, brochures, menus",
+      "Branded clothing & merchandise",
+      "Social media setup & ad campaigns",
+      "Photography & promotional videos",
     ],
   },
 ];
-
-const depositLinkFor = (category: string, packageName: string) => {
-  const params = new URLSearchParams({
-    category,
-    package: packageName,
-  });
-
-  return `https://codecompas.com/deposit?${params.toString()}`;
-};
 
 const Footer = () => {
   return (
@@ -163,86 +104,105 @@ const Footer = () => {
 
       <div className="mt-20 w-full">
         <div className="flex flex-col items-center text-center">
-          <h2 className="heading lg:max-w-[40vw]">Code Compas Pricing Sheet</h2>
+          <h2 className="heading lg:max-w-[40vw]">Code Compas — What We Offer</h2>
           <p className="text-white-200 md:mt-6 mt-4 max-w-3xl">
-            Choose a package to leave a fully refundable deposit. We review every
-            request to ensure we&apos;re the right fit—if we can&apos;t approve your
-            project, you&apos;ll receive a prompt refund.
+            Explore our favorite builds and add-ons, then ask us for a tailored quote.
+            Every project starts with a conversation so we can curate the perfect mix for your goals.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8 mt-12">
-          {pricingCategories.map((category) => (
+          {offerings.map((category) => (
             <div
               key={category.title}
-              className="flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+              className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm shadow-lg shadow-purple-500/20"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <span className="text-2xl">{category.icon}</span>
-                  <h3 className="text-2xl font-semibold text-white mt-2">
-                    {category.title}
-                  </h3>
-                </div>
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">{category.icon}</span>
+                <h3 className="text-2xl font-semibold text-white">{category.title}</h3>
               </div>
 
-              <div className="flex flex-col gap-5">
-                {category.packages.map((pricing) => (
-                  <div
-                    key={`${category.title}-${pricing.name}`}
-                    className="rounded-2xl border border-white/5 bg-black/40 p-5"
+              <ul className="flex flex-col gap-3 text-sm text-white/90">
+                {category.highlights.map((item) => (
+                  <li
+                    key={`${category.title}-${item}`}
+                    className="flex items-start gap-2 rounded-2xl bg-black/30 p-3"
                   >
-                    <div className="flex flex-col gap-2">
-                      <div className="flex flex-col">
-                        <span className="text-lg font-semibold text-white">
-                          {pricing.name}
-                        </span>
-                        <span className="text-sm text-purple font-semibold">
-                          {pricing.price}
-                        </span>
-                      </div>
-                      <p className="text-sm text-white-200 leading-relaxed">
-                        {pricing.description}
-                      </p>
-                    </div>
-
-                    <a
-                      href={depositLinkFor(category.title, pricing.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <MagicButton
-                        title="Leave Deposit"
-                        icon={<FaArrowRightLong />}
-                        position="right"
-                        containerClassName="mt-5 md:w-56"
-                      />
-                    </a>
-                  </div>
+                    <span className="mt-1 text-purple">•</span>
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
                 ))}
-              </div>
-
-              {category.notes && (
-                <ul className="flex flex-col gap-2 text-sm text-white/80">
-                  {category.notes.map((note) => (
-                    <li key={`${category.title}-${note}`}>{note}</li>
-                  ))}
-                </ul>
-              )}
+              </ul>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 rounded-3xl border border-white/10 bg-gradient-to-br from-purple/20 to-transparent p-6 text-sm text-white/80">
-          <h3 className="text-lg font-semibold text-white mb-3">
-            Why teams choose Code Compas
-          </h3>
-          <ul className="list-disc list-inside space-y-2">
-            <li>Affordable maintenance ranging from $250–$500/year.</li>
-            <li>Ownership model—no subscriptions or long-term lock-ins.</li>
-            <li>Bilingual experiences across English and Español.</li>
-            <li>Flexible pricing that scales with features, hardware, and growth.</li>
-          </ul>
+        <div className="mt-12 flex flex-col items-center gap-2 text-center text-sm text-white/80">
+          <p>👉 All services are bilingual (English &amp; Español).</p>
+          <p>👉 Ask us for a custom quote — we tailor every solution to your business.</p>
+        </div>
+
+        <div className="mt-12 rounded-3xl border border-white/10 bg-gradient-to-br from-purple/20 via-transparent to-transparent p-8 backdrop-blur-sm">
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+            <div className="flex flex-col gap-4">
+              <h3 className="text-2xl font-semibold text-white">Need a custom quote?</h3>
+              <p className="text-white-200 text-sm leading-relaxed">
+                Reach out to us at{" "}
+                <a
+                  href="mailto:ask@codecompas.com"
+                  className="text-purple underline underline-offset-4"
+                >
+                  ask@codecompas.com
+                </a>
+                {" "}or write an email here with your project, web app, website, or idea. We will get back to you within 48 hours.
+              </p>
+            </div>
+
+            <form
+              className="flex flex-col gap-4"
+              action="mailto:ask@codecompas.com"
+              method="POST"
+              encType="text/plain"
+            >
+              <label className="flex flex-col text-sm text-white/80">
+                Email
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="you@example.com"
+                  className="mt-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/40 focus:border-purple focus:outline-none"
+                />
+              </label>
+              <label className="flex flex-col text-sm text-white/80">
+                Subject
+                <input
+                  type="text"
+                  name="subject"
+                  required
+                  placeholder="Tell us what you need"
+                  className="mt-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/40 focus:border-purple focus:outline-none"
+                />
+              </label>
+              <label className="flex flex-col text-sm text-white/80">
+                Message
+                <textarea
+                  name="message"
+                  required
+                  placeholder="Share details about your project, timeline, and goals"
+                  rows={4}
+                  className="mt-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white placeholder:text-white/40 focus:border-purple focus:outline-none"
+                />
+              </label>
+
+              <MagicButton
+                title="Contact Us for a Quote"
+                icon={<FaArrowRightLong />}
+                position="right"
+                containerClassName="mt-2 w-full"
+              />
+            </form>
+          </div>
         </div>
       </div>
 
