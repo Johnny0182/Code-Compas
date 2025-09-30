@@ -9,7 +9,7 @@ export const gridItems = [
   {
     id: 5,
     title:
-      "From custom apps and websites to workflow automation and marketing, we bring your digital vision to life.",
+      "Custom apps, websites, workflow automations, and marketing. Let us help you grow 🚀",
     description: "We are Code Compas 🤠",
     className: "md:col-span-3 md:row-span-2",
     imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",

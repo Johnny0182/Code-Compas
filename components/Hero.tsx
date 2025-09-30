@@ -52,13 +52,13 @@ const Hero = () => {
            *  change md:text-6xl, add more responsive code
            */}
           <TextGenerateEffect
-            words="Transforming Concepts into Seamless User Experiences"
-            className="text-center text-[40px] md:text-5xl lg:text-6xl"
+            words="Coding Solutions for Any Industry, Business, and Entrepreneur."
+            className="leading-tight text-[36px] sm:text-[44px] md:text-6xl lg:text-7xl font-semibold mt-2"
           />
 
-          <p className="text-center md:tracking-wider mb-4 text-sm md:text-lg lg:text-2xl">
-            Expert web development team delivering solutions for modern
-            businesses.
+          <p className="mt-4 md:mt-5 text-sm sm:text-base md:text-lg lg:text-xl text-white/80 max-w-[70ch]">
+            We Build custom digital solutions in English and Spanish. Helping
+            Businesses Grow.
           </p>
 
           <a href="#about">
