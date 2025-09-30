@@ -92,7 +92,7 @@ const Footer = () => {
           Reach out to us today and let&apos;s discuss how we can help you
           achieve your goals.
         </p>
-        <a href="admin@codecompas.com">
+        <a href="mailto:admin@codecompas.com">
           <MagicButton
             title="Let's get in touch"
             icon={<FaLocationArrow />}
@@ -102,7 +102,7 @@ const Footer = () => {
         </a>
       </div>
 
-      <div className="mt-20 w-full">
+      <section id="services" className="mt-20 w-full">
         <div className="flex flex-col items-center text-center">
           <h2 className="heading lg:max-w-[40vw]">Code Compas — What We Offer</h2>
           <p className="text-white-200 md:mt-6 mt-4 max-w-3xl">
@@ -204,7 +204,7 @@ const Footer = () => {
             </form>
           </div>
         </div>
-      </div>
+      </section>
 
       <div className="flex mt-16 md:flex-row flex-col justify-between items-center">
         <p className="md:text-base text-sm md:font-normal font-light">
