@@ -37,10 +37,11 @@ const Footer = () => {
 
             <form
               className="flex flex-col gap-4"
-              action="mailto:ask@codecompas.com"
+              name="contact"
               method="POST"
-              encType="text/plain"
+              data-netlify="true"
             >
+              <input type="hidden" name="form-name" value="contact" />
               <label className="flex flex-col text-sm text-white/80">
                 Email
                 <input
