@@ -219,10 +219,14 @@ const Services = () => {
     if (typeof window === "undefined") return;
     setStickyRipple(true);
     window.setTimeout(() => setStickyRipple(false), 400);
-    cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const contactSection = document.getElementById("contact");
+    contactSection?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.setTimeout(() => {
-      window.location.href = "mailto:ask@codecompas.com";
-    }, 750);
+      const emailInput = contactSection?.querySelector(
+        "input[name='email']"
+      ) as HTMLInputElement | null;
+      emailInput?.focus();
+    }, 600);
   };
 
   return (
@@ -306,7 +310,7 @@ const Services = () => {
               we&apos;ll reply in under a day with next steps.
             </p>
             <a
-              href="mailto:ask@codecompas.com"
+              href="#contact"
               className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-purple-300/30 bg-gradient-to-r from-purple-500/80 via-fuchsia-500/70 to-purple-500/80 px-8 py-3 text-sm font-semibold tracking-wide text-white shadow-[0_15px_45px_rgba(109,40,217,0.35)] transition duration-150 ease-out"
               style={
                 {
