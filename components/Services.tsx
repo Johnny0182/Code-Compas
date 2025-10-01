@@ -11,54 +11,74 @@ export const offerings = [
   {
     title: "Websites",
     icon: "🌐",
+    badge: "Launch-ready",
+    description:
+      "Signature marketing sites, crafted to convert visitors into booked calls and loyal fans.",
+    price: "$1,250",
+    priceCaption: "Starting at",
+    timeline: "2–4 weeks",
     highlights: [
-      "Launch fast with a 1-Page Website",
-      "Grow your brand with a 3–5 Page Business Site",
-      "Custom Websites with booking, accounts, and rewards built-in",
-      "Bilingual (English & Español) to reach more customers and clients",
+      "Conversion-first landing pages, multi-page sites, and bilingual experiences (English & Español)",
+      "Lead capture, booking flows, chat widgets, and CRM-ready automations built in",
+      "On-page SEO, analytics setup, and concierge handoff so you’re launch-ready from day one",
     ],
+    ctaLabel: "Plan your website",
   },
   {
     title: "Mobile Apps",
     icon: "📱",
+    badge: "Fan-favorite",
+    description:
+      "Premium iOS, Android, and web apps that keep your community close and engaged.",
+    price: "$6,500",
+    priceCaption: "Starting at",
+    timeline: "4–8 weeks",
     highlights: [
-      "Simple App: your website, now in app form with push alerts",
-      "Business App with logins, scheduling, and reminders",
-      "E-Commerce & Food Ordering App with payments and rewards",
-      "Scalable apps built to expand as your business grows",
+      "Cross-platform builds with secure logins, personalized dashboards, and push notifications",
+      "In-app commerce, loyalty rewards, and subscription funnels to grow revenue",
+      "App Store & Play Store launch support with analytics, A/B testing, and growth playbooks",
     ],
+    ctaLabel: "Design my app",
   },
   {
     title: "Industry Solutions",
     icon: "🏗️",
+    badge: "Tailored",
+    description:
+      "Pre-vetted digital stacks built for restaurants, retailers, trades, hospitality, and beyond.",
+    price: "$3,800",
+    priceCaption: "Starting at",
+    timeline: "3–6 weeks",
     highlights: [
-      "Trade & service websites with booking, automated follow-ups, and lead capture. Perfect for busy entrepreneurs who want more clients without the extra work.",
-      "Restaurant, e-commerce, and service based websites and apps with integrated online ordering, reservations, and loyalty rewards.",
-      "POS systems with worker tablets, customer kiosks, and displays",
-      "Premium Robotics package with seating systems, POS systems, and service robots! Ask us for details.",
-      "Simple CRM tools to keep track of clients and repeat business",
+      "Online ordering, reservations, field service scheduling, and automated follow-ups",
+      "POS systems, kiosks, and digital signage that sync with your existing tools",
+      "Smart robotics, inventory tracking, and compliance workflows on one connected dashboard",
     ],
+    ctaLabel: "Explore industry kits",
   },
   {
     title: "Custom Software & Automations",
     icon: "⚙️",
+    badge: "Most requested",
+    description:
+      "From back-office automation to AI-assisted workflows, we build exactly what your team needs.",
+    price: "$2,950",
+    priceCaption: "Starting at",
+    timeline: "2–5 weeks",
     highlights: [
-      "Excel automations, financial report automations, finance dashboards, and automated payroll/accounting solutions.",
-      "Automated invoicing, payments, and client follow-ups. Digital contracts, online verifications, file encryption, and e-signatures.",
-      "Employee portals with clock-In systems, staff scheduling, workforce tracking,HR tools, incicdent reporting, automated notifications systems, and team communications.",
+      "Internal dashboards, ERP connectors, and real-time data visualizations",
+      "Secure portals with digital signatures, audit trails, and bilingual support",
+      "API integrations, RPA, and low-code orchestration to replace manual busywork",
     ],
+    ctaLabel: "Automate my ops",
   },
-  {
-    title: "Add-Ons",
-    icon: "🎨",
-    highlights: [
-      "Custom branding & logo design",
-      "Flyers, menus, and marketing print materials",
-      "Branded uniforms, clothing, and team merchandise",
-      "Social media setup, digital ads, and campaign support",
-      "Professional photography & promo video editing",
-    ],
-  },
+];
+
+const addOns = [
+  "Brand identity suites & launch kits",
+  "Content, photo & promo video production",
+  "Paid ads, CRM tuning & lifecycle campaigns",
+  "Merch, uniforms & on-site signage",
 ];
 
 const microcopyMessages = [
@@ -247,40 +267,101 @@ const Services = () => {
         <p className="uppercase tracking-[0.3em] text-xs text-white/60">
           Code Compas 🤠
         </p>
-        <h2 className="heading lg:max-w-[40vw]">Services & Solutions</h2>
-        <p className="text-white-200 md:mt-6 mt-4 max-w-3xl">
-          Explore our favorite builds and add-ons, then ask us for a tailored
-          quote. Every project starts with a conversation so we can make your
-          idea come to life! 💻 ✨
+        <h2 className="heading lg:max-w-[40vw]">Services &amp; Signature Packages</h2>
+        <p className="text-white-200 md:mt-6 mt-4 max-w-3xl text-balance">
+          Choose a flagship build, mix in bespoke automations, then layer on add-ons for a fully tailored experience.
+          Every engagement starts with strategy, bilingual storytelling, and a concierge project lead.
         </p>
       </div>
 
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 xl:gap-8 mt-12">
+      <div className="relative z-10 mt-12 grid grid-cols-1 gap-6 sm:gap-7 md:grid-cols-2 xl:grid-cols-4">
         {offerings.map((category) => (
-          <div
+          <article
             key={category.title}
-            className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm shadow-lg shadow-purple-500/20"
+            className="group relative flex flex-col gap-5 overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-7 shadow-xl shadow-purple-500/10 transition duration-300 ease-out hover:-translate-y-2 hover:border-purple-300/40 hover:shadow-purple-500/25"
           >
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">{category.icon}</span>
-              <h3 className="text-2xl font-semibold text-white">
-                {category.title}
-              </h3>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="relative flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl drop-shadow-sm">{category.icon}</span>
+                <div className="text-left">
+                  <h3 className="text-xl font-semibold text-white md:text-2xl">
+                    {category.title}
+                  </h3>
+                  <p className="text-xs uppercase tracking-[0.32em] text-purple-100/70">
+                    {category.badge}
+                  </p>
+                </div>
+              </div>
+              <div className="rounded-full border border-purple-300/40 bg-purple-300/10 px-3 py-1 text-xs font-medium text-purple-100">
+                {category.timeline}
+              </div>
             </div>
 
-            <ul className="flex flex-col gap-3 text-sm text-white/90">
+            <p className="relative text-sm text-white/80 sm:text-base">
+              {category.description}
+            </p>
+
+            <div className="relative flex items-end justify-between gap-4 rounded-2xl bg-black/40 px-4 py-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.28em] text-white/50">
+                  {category.priceCaption}
+                </p>
+                <p className="text-2xl font-semibold text-white sm:text-3xl">
+                  {category.price}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-white/60">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-lg">
+                  →
+                </span>
+                <span className="hidden text-right font-medium uppercase tracking-[0.24em] sm:block">
+                  Reply in &lt;24h
+                </span>
+              </div>
+            </div>
+
+            <ul className="relative flex flex-col gap-3 text-sm text-white/90">
               {category.highlights.map((item) => (
                 <li
                   key={`${category.title}-${item}`}
-                  className="flex items-start gap-2 rounded-2xl bg-black/30 p-3"
+                  className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/30 p-3 transition duration-200 group-hover:border-purple-200/40"
                 >
-                  <span className="mt-1 text-purple">•</span>
-                  <span className="leading-relaxed">{item}</span>
+                  <span className="mt-1 text-purple">✦</span>
+                  <span className="leading-relaxed text-pretty">{item}</span>
                 </li>
               ))}
             </ul>
-          </div>
+
+            <a
+              href="#contact"
+              className="relative mt-auto inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border border-purple-200/30 bg-gradient-to-r from-purple-600/70 via-fuchsia-500/60 to-purple-600/70 px-5 py-2.5 text-sm font-semibold tracking-wide text-white shadow-[0_12px_40px_rgba(109,40,217,0.35)] transition hover:shadow-[0_18px_55px_rgba(109,40,217,0.55)]"
+            >
+              {category.ctaLabel}
+              <span className="text-base">→</span>
+            </a>
+          </article>
         ))}
+      </div>
+
+      <div className="relative z-10 mt-10 flex flex-col items-center gap-4 rounded-[28px] border border-white/10 bg-white/5 p-6 text-center shadow-lg shadow-purple-500/10">
+        <p className="text-sm font-medium uppercase tracking-[0.28em] text-white/60">
+          Add-ons to layer in
+        </p>
+        <p className="max-w-2xl text-sm text-white/75 sm:text-base">
+          Elevate any package with creative extras—branding, content, marketing ops, on-site collateral, and more. Ask about bundle pricing when we scope your project.
+        </p>
+        <div className="flex w-full flex-wrap items-center justify-center gap-3">
+          {addOns.map((item) => (
+            <span
+              key={item}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-4 py-2 text-xs font-medium text-white/80 backdrop-blur"
+            >
+              <span className="text-purple">＋</span>
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
 
       <div className="relative z-10 mt-16 flex justify-center px-6">
