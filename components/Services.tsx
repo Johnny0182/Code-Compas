@@ -279,63 +279,6 @@ const Services = () => {
           Services &amp; Signature Packages
         </h2>
       </div>
-
-
-      <div className="relative z-10 mt-6 flex w-full justify-center px-6">
-        <div className="relative w-full max-w-[600px] overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0e27]/80 px-8 py-10 text-center text-white shadow-2xl shadow-purple-500/30 backdrop-blur-xl">
-          <div className="pointer-events-none absolute inset-0">
-            <span
-              aria-hidden="true"
-              className="absolute -right-12 -top-14 h-36 w-36 rounded-full bg-purple/30 opacity-60 blur-3xl animate-first"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute -bottom-16 -left-12 h-32 w-32 rounded-full bg-blue-500/25 opacity-60 blur-3xl animate-second"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent_60%)] opacity-40"
-            />
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.25),_rgba(255,255,255,0)_35%,_rgba(255,255,255,0)_65%,_rgba(255,255,255,0.35))] opacity-0 animate-[shimmer_8s_linear_infinite]"
-            />
-          </div>
-
-          <div className="relative z-10 flex flex-col items-center gap-6 text-white">
-            <div className="flex w-full items-center justify-between text-xs uppercase tracking-[0.32em] text-white/50">
-              <span>Our approach</span>
-              <span>Start → Launch</span>
-            </div>
-
-            <div className="flex flex-col items-center gap-5 text-white">
-              <span className="text-4xl" aria-hidden="true">
-                🤝
-              </span>
-              <h3 className="text-2xl font-semibold md:text-[28px]">
-                Crafted partnerships, not one-off projects
-              </h3>
-              <p className="max-w-[52ch] text-sm leading-relaxed text-white/80 md:text-base">
-                From first consult to launch day, we guide your team through bilingual roadmaps, transparent approvals, and confident go-lives—always with a dedicated product lead at your side.
-              </p>
-            </div>
-
-            <ul className="w-full space-y-3 text-left text-sm text-white/75 md:text-base">
-              <li>
-                <span className="font-semibold text-white">Plan with clarity:</span> collaborative scopes, pricing that sticks, and design buy-in before dev starts.
-              </li>
-              <li>
-                <span className="font-semibold text-white">Build with rhythm:</span> bilingual standups, async updates, and training that keeps every teammate moving.
-              </li>
-              <li>
-                <span className="font-semibold text-white">Launch with backup:</span> dedicated leads, post-launch tuning, and support that grows with you.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-
       <div className="relative z-10 mt-12 grid grid-cols-1 gap-6 sm:gap-7 md:grid-cols-2 xl:grid-cols-4">
         {offerings.map((category) => (
           <article

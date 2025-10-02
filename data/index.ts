@@ -21,17 +21,6 @@ export const gridItems = [
     spareImg: "/grid.svg",
   },
   {
-    id: 2,
-    title: "Plan → Build → Launch, on one bilingual track",
-    description:
-      "Our signature 3-step process keeps pricing locked, feedback flowing, and launches calm—across English & Español.",
-    className: "lg:col-span-2 md:col-span-3 md:row-span-2",
-    imgClassName: "",
-    titleClassName: "justify-start",
-    img: "",
-    spareImg: "",
-  },
-  {
     id: 3,
     description: "Websites and Marketing in English & Español 🇺🇸🇲🇽",
     title:

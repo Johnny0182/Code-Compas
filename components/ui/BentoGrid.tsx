@@ -7,7 +7,6 @@ import Lottie from "react-lottie";
 import { cn } from "@/lib/utils";
 
 import { BackgroundGradientAnimation } from "./GradientBg";
-import ProcessSlideshow from "./ProcessSlideshow";
 import animationData from "@/data/confetti.json";
 import MagicButton from "../MagicButton";
 
@@ -138,9 +137,6 @@ export const BentoGridItem = ({
           >
             {title}
           </div>
-
-          {/* for the github 3d globe */}
-          {id === 2 && <ProcessSlideshow />}
 
           {id === 3 && (
             <div className="flex gap-1 lg:gap-5 w-fit absolute -right-3 lg:-right-2">

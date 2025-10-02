@@ -9,14 +9,10 @@ const Grid = dynamic(() => import("@/components/Grid"), { ssr: false });
 const Services = dynamic(() => import("@/components/Services"), {
   ssr: false,
 });
-const RecentProjects = dynamic(
-  () => import("@/components/RecentProjects"),
-  { ssr: false }
-);
-const Clients = dynamic(() => import("@/components/Clients"), {
+const RecentProjects = dynamic(() => import("@/components/RecentProjects"), {
   ssr: false,
 });
-const Approach = dynamic(() => import("@/components/Approach"), {
+const Clients = dynamic(() => import("@/components/Clients"), {
   ssr: false,
 });
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
@@ -35,7 +31,6 @@ const Home = () => {
         <Services />
         <RecentProjects />
         <Clients />
-        <Approach />
         <Footer />
       </div>
     </main>
