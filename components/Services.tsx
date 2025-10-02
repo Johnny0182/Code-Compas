@@ -155,7 +155,8 @@ const Services = () => {
 
     window.addEventListener("deviceorientation", handleOrientation);
 
-    return () => window.removeEventListener("deviceorientation", handleOrientation);
+    return () =>
+      window.removeEventListener("deviceorientation", handleOrientation);
   }, []);
 
   const spotlightStyle = useMemo(() => {
@@ -211,7 +212,9 @@ const Services = () => {
     setTilt((prev) => ({ ...prev, rotateX: 0, rotateY: 0 }));
   };
 
-  const handleButtonPointerMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+  const handleButtonPointerMove = (
+    event: ReactPointerEvent<HTMLAnchorElement>
+  ) => {
     const { currentTarget } = event;
     const rect = currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left - rect.width / 2;
@@ -226,9 +229,7 @@ const Services = () => {
     currentTarget.style.setProperty("--y", `${percentY}%`);
   };
 
-  const resetButtonOffset: PointerEventHandler<HTMLAnchorElement> = (
-    event
-  ) => {
+  const resetButtonOffset: PointerEventHandler<HTMLAnchorElement> = (event) => {
     setButtonOffset({ x: 0, y: 0 });
     const { currentTarget } = event;
     currentTarget.style.setProperty("--x", "50%");
@@ -267,10 +268,17 @@ const Services = () => {
         <p className="uppercase tracking-[0.3em] text-xs text-white/60">
           Code Compas 🤠
         </p>
-        <h2 className="heading lg:max-w-[40vw]">Services &amp; Signature Packages</h2>
+        <h2 className="heading lg:max-w-[40vw]">
+          Services &amp; Signature Packages
+        </h2>
         <p className="text-white-200 md:mt-6 mt-4 max-w-3xl text-balance">
-          Choose a flagship build, mix in bespoke automations, then layer on add-ons for a fully tailored experience.
-          Every engagement starts with strategy, bilingual storytelling, and a concierge project lead.
+          Choose your platform for a complete digital solution tailored for your
+          business workflows. Every project starts with a planning stage where
+          we map out features, lock in pricing, and get your approval on design
+          direction. You also get bilingual execution, hands-on training,
+          regular meetings to keep things moving, and a dedicated project lead.
+          Code Compas has you covered from first meeting to final launch, and
+          beyond 📈 🤠
         </p>
       </div>
 
@@ -349,7 +357,9 @@ const Services = () => {
           Add-ons to layer in
         </p>
         <p className="max-w-2xl text-sm text-white/75 sm:text-base">
-          Elevate any package with creative extras—branding, content, marketing ops, on-site collateral, and more. Ask about bundle pricing when we scope your project.
+          Elevate any package with creative extras—branding, content, marketing
+          ops, on-site collateral, and more. Ask about bundle pricing when we
+          scope your project.
         </p>
         <div className="flex w-full flex-wrap items-center justify-center gap-3">
           {addOns.map((item) => (
@@ -386,8 +396,8 @@ const Services = () => {
               Ready to take your digital presence to the next level?
             </h3>
             <p className="text-sm text-white/80 md:text-base">
-              All services are bilingual, tailored to your business, and
-              kick off with a quick discovery chat. Tell us what you need and
+              All services are bilingual, tailored to your business, and kick
+              off with a quick discovery chat. Tell us what you need and
               we&apos;ll reply in under a day with next steps.
             </p>
             <a
@@ -403,29 +413,14 @@ const Services = () => {
               onPointerMove={handleButtonPointerMove}
               onPointerLeave={resetButtonOffset}
             >
-              <span className="relative z-10">Talk to us about your project 🤠</span>
+              <span className="relative z-10">
+                Talk to us about your project 🤠
+              </span>
               <span className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100 [background:radial-gradient(120px_circle_at_var(--x,50%)_var(--y,50%),rgba(255,255,255,0.35),transparent_65%)]" />
             </a>
           </div>
         </div>
       </div>
-
-      {showStickyCTA ? (
-        <div className="fixed inset-x-0 bottom-6 z-20 flex justify-center px-6">
-          <button
-            type="button"
-            onClick={handleStickyCTA}
-            className="relative flex w-full max-w-xs items-center justify-center overflow-hidden rounded-full border border-white/20 bg-purple-600/90 px-6 py-3 text-sm font-semibold text-white shadow-lg backdrop-blur"
-          >
-            Talk to us about your project 🤠
-            <span
-              className={`pointer-events-none absolute inset-0 scale-0 rounded-full bg-white/40 transition-transform duration-300 ease-out ${
-                stickyRipple ? "scale-100" : ""
-              }`}
-            />
-          </button>
-        </div>
-      ) : null}
     </section>
   );
 };

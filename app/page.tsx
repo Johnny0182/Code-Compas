@@ -5,7 +5,6 @@ import { navItems } from "@/data";
 import Hero from "@/components/Hero";
 import Grid from "@/components/Grid";
 import Services from "@/components/Services";
-import ContactCTA from "@/components/ContactCTA";
 import RecentProjects from "@/components/RecentProjects";
 import Clients from "@/components/Clients";
 import Approach from "@/components/Approach";
@@ -20,7 +19,6 @@ const Home = () => {
         <Hero />
         <Grid />
         <Services />
-        <ContactCTA />
         <RecentProjects />
         <Clients />
         <Approach />
