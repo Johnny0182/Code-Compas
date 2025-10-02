@@ -2,7 +2,6 @@
 
 import type {
   CSSProperties,
-  KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
   PointerEventHandler,
 } from "react";
@@ -105,9 +104,12 @@ const Services = () => {
   const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const [stickyRipple, setStickyRipple] = useState(false);
-  const [processReveal, setProcessReveal] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     const interval = window.setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % microcopyMessages.length);
     }, 6000);
@@ -122,7 +124,9 @@ const Services = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
     const mediaQuery = window.matchMedia("(max-width: 768px)");
     if (!mediaQuery.matches) return;
 
@@ -214,42 +218,6 @@ const Services = () => {
     setTilt((prev) => ({ ...prev, rotateX: 0, rotateY: 0 }));
   };
 
-  const handleProcessPointerEnter = (
-    event: ReactPointerEvent<HTMLDivElement>
-  ) => {
-    if (event.pointerType === "touch") return;
-    setProcessReveal(true);
-  };
-
-  const handleProcessPointerLeave = (
-    event: ReactPointerEvent<HTMLDivElement>
-  ) => {
-    if (event.pointerType === "touch") return;
-    setProcessReveal(false);
-  };
-
-  const handleProcessFocus = () => {
-    setProcessReveal(true);
-  };
-
-  const handleProcessBlur = () => {
-    setProcessReveal(false);
-  };
-
-  const handleProcessKeyDown = (
-    event: ReactKeyboardEvent<HTMLDivElement>
-  ) => {
-    if (event.key === " " || event.key === "Enter") {
-      event.preventDefault();
-      setProcessReveal((prev) => !prev);
-    }
-
-    if (event.key === "Escape") {
-      setProcessReveal(false);
-      event.currentTarget.blur();
-    }
-  };
-
   const handleButtonPointerMove = (
     event: ReactPointerEvent<HTMLAnchorElement>
   ) => {
@@ -275,7 +243,8 @@ const Services = () => {
   };
 
   const handleStickyCTA = () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
     setStickyRipple(true);
     window.setTimeout(() => setStickyRipple(false), 400);
     const contactSection = document.getElementById("contact");
@@ -311,53 +280,61 @@ const Services = () => {
         </h2>
       </div>
 
+
       <div className="relative z-10 mt-6 flex w-full justify-center px-6">
-        <div
-          tabIndex={0}
-          aria-describedby="services-process-reveal"
-          aria-label="Code Compas services process details"
-          role="button"
-          aria-pressed={processReveal}
-          className="group/process relative w-full max-w-3xl focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple/60"
-          data-active={processReveal}
-          onPointerEnter={handleProcessPointerEnter}
-          onPointerLeave={handleProcessPointerLeave}
-          onFocus={handleProcessFocus}
-          onBlur={handleProcessBlur}
-          onKeyDown={handleProcessKeyDown}
-        >
-          <div className="pointer-events-none absolute inset-0 -translate-y-4 rounded-[36px] bg-purple/20 blur-3xl opacity-40 transition-opacity duration-700 group-hover/process:opacity-80 group-focus-visible/process:opacity-80" aria-hidden="true" />
-          <div className="relative rounded-[32px] bg-gradient-to-r from-purple-500/70 via-blue-500/70 to-purple-500/70 p-[1px]">
-            <div
-              className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0e27]/80 px-8 py-10 text-center shadow-2xl shadow-purple-500/30 backdrop-blur-xl transition duration-300 group-hover/process:bg-[#0a0e27]/90 group-focus-visible/process:bg-[#0a0e27]/90 group-data-[active=true]/process:bg-[#0a0e27]/90"
-            >
-              <div className="pointer-events-none absolute inset-0">
-                <span aria-hidden="true" className="absolute -right-12 -top-14 h-36 w-36 rounded-full bg-purple/30 blur-3xl opacity-60 animate-first" />
-                <span aria-hidden="true" className="absolute -bottom-16 -left-12 h-32 w-32 rounded-full bg-blue-500/25 blur-3xl opacity-60 animate-second" />
-                <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent_60%)] opacity-40 transition-opacity duration-300 group-hover/process:opacity-60 group-focus-visible/process:opacity-60 group-data-[active=true]/process:opacity-60" />
-                <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.25),_rgba(255,255,255,0)_35%,_rgba(255,255,255,0)_65%,_rgba(255,255,255,0.35))] opacity-0 animate-[shimmer_8s_linear_infinite] group-hover/process:opacity-100 group-focus-visible/process:opacity-100 group-data-[active=true]/process:opacity-100" />
-              </div>
+        <div className="relative w-full max-w-[600px] overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0e27]/80 px-8 py-10 text-center text-white shadow-2xl shadow-purple-500/30 backdrop-blur-xl">
+          <div className="pointer-events-none absolute inset-0">
+            <span
+              aria-hidden="true"
+              className="absolute -right-12 -top-14 h-36 w-36 rounded-full bg-purple/30 opacity-60 blur-3xl animate-first"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-16 -left-12 h-32 w-32 rounded-full bg-blue-500/25 opacity-60 blur-3xl animate-second"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent_60%)] opacity-40"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.25),_rgba(255,255,255,0)_35%,_rgba(255,255,255,0)_65%,_rgba(255,255,255,0.35))] opacity-0 animate-[shimmer_8s_linear_infinite]"
+            />
+          </div>
 
-              <div className="relative z-10 flex flex-col items-center gap-6 text-white">
-                <div className="flex flex-col items-center gap-3 transform-gpu transition duration-300 group-hover/process:opacity-0 group-hover/process:translate-y-[-12px] group-focus-visible/process:opacity-0 group-focus-visible/process:translate-y-[-12px] group-data-[active=true]/process:opacity-0 group-data-[active=true]/process:translate-y-[-12px]">
-                  <span aria-hidden="true" className="text-4xl drop-shadow">✨</span>
-                  <p className="text-lg font-semibold tracking-wide text-white/80">
-                    Hover to reveal our process
-                  </p>
-                </div>
-
-                <p
-                  id="services-process-reveal"
-                  className="-translate-y-3 text-sm leading-relaxed text-white/80 opacity-0 transition duration-300 group-hover/process:translate-y-0 group-hover/process:opacity-100 group-focus-visible/process:translate-y-0 group-focus-visible/process:opacity-100 group-data-[active=true]/process:translate-y-0 group-data-[active=true]/process:opacity-100 md:text-base transform-gpu"
-                >
-                  Choose your platform for a complete digital solution tailored for your business workflows. Every project starts with a planning stage where we map out features, lock in pricing, and get your approval on design direction. You also get bilingual execution, hands-on training, regular meetings to keep things moving, and a dedicated project lead. Code Compas has you covered from first meeting to final launch, and beyond 🚀🤠
-                </p>
-                <span className="sr-only">Focus or hover this card to read the full process description.</span>
-              </div>
+          <div className="relative z-10 flex flex-col items-center gap-6 text-white">
+            <div className="flex w-full items-center justify-between text-xs uppercase tracking-[0.32em] text-white/50">
+              <span>Our approach</span>
+              <span>Start → Launch</span>
             </div>
+
+            <div className="flex flex-col items-center gap-5 text-white">
+              <span className="text-4xl" aria-hidden="true">
+                🤝
+              </span>
+              <h3 className="text-2xl font-semibold md:text-[28px]">
+                Crafted partnerships, not one-off projects
+              </h3>
+              <p className="max-w-[52ch] text-sm leading-relaxed text-white/80 md:text-base">
+                From first consult to launch day, we guide your team through bilingual roadmaps, transparent approvals, and confident go-lives—always with a dedicated product lead at your side.
+              </p>
+            </div>
+
+            <ul className="w-full space-y-3 text-left text-sm text-white/75 md:text-base">
+              <li>
+                <span className="font-semibold text-white">Plan with clarity:</span> collaborative scopes, pricing that sticks, and design buy-in before dev starts.
+              </li>
+              <li>
+                <span className="font-semibold text-white">Build with rhythm:</span> bilingual standups, async updates, and training that keeps every teammate moving.
+              </li>
+              <li>
+                <span className="font-semibold text-white">Launch with backup:</span> dedicated leads, post-launch tuning, and support that grows with you.
+              </li>
+            </ul>
           </div>
         </div>
       </div>
+
 
       <div className="relative z-10 mt-12 grid grid-cols-1 gap-6 sm:gap-7 md:grid-cols-2 xl:grid-cols-4">
         {offerings.map((category) => (

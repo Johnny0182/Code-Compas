@@ -22,8 +22,9 @@ export const gridItems = [
   },
   {
     id: 2,
-    title: "We work across every timezone and every industry 🌐",
-    description: "",
+    title: "Plan → Build → Launch, on one bilingual track",
+    description:
+      "Our signature 3-step process keeps pricing locked, feedback flowing, and launches calm—across English & Español.",
     className: "lg:col-span-2 md:col-span-3 md:row-span-2",
     imgClassName: "",
     titleClassName: "justify-start",
