@@ -10,7 +10,7 @@ export const gridItems = [
   {
     id: 5,
     title:
-      "Custom apps, websites, workflow automations, and marketing. Let us help you grow 🚀",
+      "We build custom apps, websites, and automations. Let us create a digital solution that works for you!",
     description: "We are Code Compas 🤠",
     className: "md:col-span-3 md:row-span-2",
     imgClassName: "absolute right-0 bottom-0 md:w-96 w-60",
@@ -22,7 +22,7 @@ export const gridItems = [
   },
   {
     id: 3,
-    description: "Websites and Marketing in English & Español 🇺🇸🇲🇽",
+    description: "Built in Los Angeles, CA and ready for the World 🌎",
     title:
       "We speak English and Spanish. Helping you win jobs, earn trust, and grow your business.",
     className: "lg:col-span-2 md:col-span-3 md:row-span-2",
@@ -35,7 +35,7 @@ export const gridItems = [
   },
   {
     id: 6,
-    title: "Contact us for a free quote 📝",
+    title: "Contact us now for a 🆓 quote. ",
     description: "",
     className: "lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",

@@ -102,13 +102,13 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
     };
   }, []);
 
-  const label = isCopied ? "Email copied!" : "Copy Email";
+  const label = isCopied ? "Email copied!" : "⧉ Click to copy email";
 
   return (
     <div className="relative flex h-full flex-col justify-between gap-6 px-6 py-8 lg:px-10 lg:py-12">
       <div className="relative z-10 space-y-3 text-left">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#98A2D7]/70">
-          Let’s talk about your project 🙌
+          Let’s talk about your project 💫
         </p>
         {title && (
           <h3 className="text-2xl font-semibold leading-tight text-white lg:text-3xl">
@@ -116,8 +116,8 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
           </h3>
         )}
         <p className="text-sm text-[#C1C2D3]/80">
-          No booking needed for a quote. Just email us and we’ll reply within 24
-          hours. 📬 One click to copy.
+          No booking needed for a quote. Email us and we’ll reply within 24
+          hours.
         </p>
       </div>
 
@@ -166,9 +166,7 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
               }}
               transition={{ type: "spring", stiffness: 260, damping: 18 }}
               className="text-lg leading-none"
-            >
-              🤠
-            </motion.span>
+            ></motion.span>
             <span className="text-center leading-snug">{label}</span>
           </span>
         </motion.button>
