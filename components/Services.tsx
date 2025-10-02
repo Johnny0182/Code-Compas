@@ -276,7 +276,7 @@ const Services = () => {
           Code Compas 🤠
         </p>
         <h2 className="heading lg:max-w-[40vw]">
-          Services &amp; Signature Packages
+          Services & Signature Packages
         </h2>
       </div>
       <div className="relative z-10 mt-12 grid grid-cols-1 gap-6 sm:gap-7 md:grid-cols-2 xl:grid-cols-4">
