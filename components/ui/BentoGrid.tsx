@@ -66,6 +66,9 @@ export const BentoGridItem = ({
   };
 
   const handleCopy = () => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      return;
+    }
     const text = "ask@codecompas.com";
     navigator.clipboard.writeText(text);
     setCopied(true);
