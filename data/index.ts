@@ -22,7 +22,7 @@ export const gridItems = [
   },
   {
     id: 3,
-    description: "Websites and Marketing in English & Español 🇺🇸🇲🇽",
+    description: "Built in Los Angeles, CA and ready for the World 🌎",
     title:
       "We speak English and Spanish. Helping you win jobs, earn trust, and grow your business.",
     className: "lg:col-span-2 md:col-span-3 md:row-span-2",
