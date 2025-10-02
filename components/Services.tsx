@@ -108,6 +108,10 @@ const Services = () => {
   const [processReveal, setProcessReveal] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     const interval = window.setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % microcopyMessages.length);
     }, 6000);
@@ -122,7 +126,9 @@ const Services = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
     const mediaQuery = window.matchMedia("(max-width: 768px)");
     if (!mediaQuery.matches) return;
 
@@ -275,7 +281,8 @@ const Services = () => {
   };
 
   const handleStickyCTA = () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined")
+      return;
     setStickyRipple(true);
     window.setTimeout(() => setStickyRipple(false), 400);
     const contactSection = document.getElementById("contact");
