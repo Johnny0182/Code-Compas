@@ -1,26 +1,30 @@
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { IoCopyOutline } from "react-icons/io5";
-
-// Also install this npm i --save-dev @types/react-lottie
+import { AnimatePresence, motion, useSpring } from "framer-motion";
 import Lottie from "react-lottie";
 
 import { cn } from "@/lib/utils";
 
-import { BackgroundGradientAnimation } from "./GradientBg";
 import animationData from "@/data/confetti.json";
 import MagicButton from "../MagicButton";
 
-export const BentoGrid = ({
-  className,
-  children,
-}: {
+type BentoGridProps = {
   className?: string;
   children?: React.ReactNode;
-}) => {
+};
+
+export const BentoGrid = ({ className, children }: BentoGridProps) => {
   return (
     <div
       className={cn(
-        // change gap-4 to gap-8, change grid-cols-3 to grid-cols-5, remove md:auto-rows-[18rem], add responsive code
         "grid grid-cols-1 md:grid-cols-6 lg:grid-cols-5 md:grid-row-7 gap-4 lg:gap-8 mx-auto",
         className
       )}
@@ -30,144 +34,391 @@ export const BentoGrid = ({
   );
 };
 
+type BentoGridItemProps = {
+  className?: string;
+  id: number;
+  title?: ReactNode;
+  description?: ReactNode;
+  img?: string;
+  imgClassName?: string;
+  titleClassName?: string;
+  spareImg?: string;
+};
+
+const ContactCard = ({ title }: { title?: ReactNode }) => {
+  const emailAddress = "ask@codecompas.com";
+  const [isCopied, setIsCopied] = useState(false);
+  const [mode, setMode] = useState<"repel" | "attract">("repel");
+  const [escapeCount, setEscapeCount] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const arenaRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLDivElement | null>(null);
+  const resetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const confettiTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const lastRepelRef = useRef<number>(0);
+
+  const x = useSpring(0, { stiffness: 280, damping: 22, mass: 0.8 });
+  const y = useSpring(0, { stiffness: 280, damping: 22, mass: 0.8 });
+  const rotate = useSpring(0, { stiffness: 180, damping: 24 });
+  const scale = useSpring(1, { stiffness: 420, damping: 32 });
+  const glowX = useSpring(0, { stiffness: 140, damping: 28 });
+  const glowY = useSpring(0, { stiffness: 140, damping: 28 });
+
+  const confettiOptions = useMemo(
+    () => ({
+      loop: false,
+      autoplay: true,
+      animationData,
+      rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice",
+      },
+    }),
+    []
+  );
+
+  const clampPosition = useCallback(
+    (targetX: number, targetY: number) => {
+      const arena = arenaRef.current;
+      const button = buttonRef.current;
+
+      if (!arena || !button) {
+        return { x: targetX, y: targetY };
+      }
+
+      const arenaRect = arena.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+
+      const maxX = arenaRect.width / 2 - buttonRect.width / 2 - 8;
+      const maxY = arenaRect.height / 2 - buttonRect.height / 2 - 8;
+
+      return {
+        x: Math.max(-maxX, Math.min(maxX, targetX)),
+        y: Math.max(-maxY, Math.min(maxY, targetY)),
+      };
+    },
+    []
+  );
+
+  const moveButton = useCallback(
+    (
+      targetX: number,
+      targetY: number,
+      options: { immediate?: boolean } = {}
+    ) => {
+      const { x: clampedX, y: clampedY } = clampPosition(targetX, targetY);
+      const targetRotation =
+        ((Math.atan2(clampedY, clampedX) * 180) / Math.PI) * 0.12;
+
+      if (options.immediate) {
+        x.jump(clampedX);
+        y.jump(clampedY);
+        rotate.jump(targetRotation);
+        glowX.jump(clampedX);
+        glowY.jump(clampedY);
+      } else {
+        x.set(clampedX);
+        y.set(clampedY);
+        rotate.set(targetRotation);
+        glowX.set(clampedX);
+        glowY.set(clampedY);
+      }
+    },
+    [clampPosition, glowX, glowY, rotate, x, y]
+  );
+
+  useEffect(() => {
+    moveButton(0, 0, { immediate: true });
+  }, [moveButton]);
+
+  useEffect(() => {
+    if (mode === "attract") {
+      scale.jump(1.12);
+      const timeout = setTimeout(() => scale.set(1.05), 220);
+      return () => clearTimeout(timeout);
+    }
+
+    scale.set(1);
+  }, [mode, scale]);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimeoutRef.current) {
+        clearTimeout(resetTimeoutRef.current);
+      }
+      if (confettiTimeoutRef.current) {
+        clearTimeout(confettiTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (escapeCount >= 3 && mode === "repel") {
+      setMode("attract");
+    }
+  }, [escapeCount, mode]);
+
+  const handleMouseEnter = useCallback(() => {
+    setMode("repel");
+    setEscapeCount(0);
+    lastRepelRef.current = performance.now();
+    if (!isCopied) {
+      moveButton(0, 0);
+    }
+  }, [isCopied, moveButton]);
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent<HTMLDivElement>) => {
+      const arena = arenaRef.current;
+      const button = buttonRef.current;
+
+      if (!arena || !button) {
+        return;
+      }
+
+      const arenaRect = arena.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+
+      const cardCenterX = arenaRect.left + arenaRect.width / 2;
+      const cardCenterY = arenaRect.top + arenaRect.height / 2;
+
+      const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+      const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+      const cursorX = event.clientX;
+      const cursorY = event.clientY;
+
+      const distanceToButton = Math.hypot(
+        cursorX - buttonCenterX,
+        cursorY - buttonCenterY
+      );
+
+      if (mode === "repel") {
+        const repelRadius = 120;
+        if (distanceToButton < repelRadius) {
+          const now = performance.now();
+          if (now - lastRepelRef.current > 180) {
+            lastRepelRef.current = now;
+            setEscapeCount((value) => Math.min(value + 1, 4));
+          }
+
+          const dx = buttonCenterX - cursorX;
+          const dy = buttonCenterY - cursorY;
+          const distance = Math.max(distanceToButton, 1);
+          const intensity =
+            ((repelRadius - distance) / repelRadius) * 140 + 24;
+
+          const targetX =
+            buttonCenterX - cardCenterX + (dx / distance) * intensity;
+          const targetY =
+            buttonCenterY - cardCenterY + (dy / distance) * intensity;
+
+          moveButton(targetX, targetY);
+          return;
+        }
+      } else {
+        const cursorOffsetX = cursorX - cardCenterX;
+        const cursorOffsetY = cursorY - cardCenterY;
+        const snapRadius = 50;
+
+        if (distanceToButton < snapRadius) {
+          moveButton(cursorOffsetX, cursorOffsetY, { immediate: true });
+        } else {
+          moveButton(cursorOffsetX, cursorOffsetY);
+        }
+        return;
+      }
+
+      if (mode === "repel") {
+        const currentX = x.get();
+        const currentY = y.get();
+
+        if (Math.abs(currentX) > 4 || Math.abs(currentY) > 4) {
+          moveButton(currentX * 0.85, currentY * 0.85);
+        } else {
+          moveButton(0, 0);
+        }
+      }
+    },
+    [mode, moveButton, x, y]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    setMode("repel");
+    setEscapeCount(0);
+    moveButton(0, 0);
+  }, [moveButton]);
+
+  const handleCopy = useCallback(() => {
+    if (isCopied) {
+      return;
+    }
+
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(emailAddress).catch(() => undefined);
+    }
+
+    setIsCopied(true);
+    setShowConfetti(true);
+    setMode("repel");
+    setEscapeCount(0);
+    moveButton(0, 0, { immediate: true });
+
+    if (confettiTimeoutRef.current) {
+      clearTimeout(confettiTimeoutRef.current);
+    }
+    confettiTimeoutRef.current = setTimeout(() => {
+      setShowConfetti(false);
+    }, 1200);
+
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current);
+    }
+    resetTimeoutRef.current = setTimeout(() => {
+      setIsCopied(false);
+      setShowConfetti(false);
+      setMode("repel");
+      setEscapeCount(0);
+      moveButton(0, 0);
+    }, 3000);
+  }, [emailAddress, isCopied, moveButton]);
+
+  return (
+    <div className="relative flex h-full flex-col justify-between gap-6 px-6 py-8 lg:px-10 lg:py-12">
+      <div className="relative z-10 space-y-3 text-left">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#98A2D7]/70">
+          Say hello
+        </p>
+        {title && (
+          <h3 className="text-2xl font-semibold leading-tight text-white lg:text-3xl">
+            {title}
+          </h3>
+        )}
+        <p className="text-sm text-[#C1C2D3]/80">
+          Prefer email? Copy our address in one click and we will respond
+          within one business day.
+        </p>
+      </div>
+
+      <div
+        ref={arenaRef}
+        className="relative flex h-48 w-full flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm"
+        onMouseEnter={handleMouseEnter}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ cursor: mode === "attract" ? "pointer" : "default" }}
+      >
+        <motion.div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ x: glowX, y: glowY }}
+        >
+          <div className="h-16 w-40 rounded-full bg-[radial-gradient(circle_at_center,_rgba(108,92,231,0.35)_0%,_rgba(108,92,231,0)_70%)] blur-xl" />
+        </motion.div>
+
+        <motion.div
+          ref={buttonRef}
+          className="absolute left-1/2 top-1/2 w-full max-w-[220px] -translate-x-1/2 -translate-y-1/2"
+          style={{ x, y, rotate, scale }}
+        >
+          <MagicButton
+            title={isCopied ? "Email copied!" : "Copy our email address"}
+            icon={<IoCopyOutline />}
+            position="left"
+            handleClick={handleCopy}
+            otherClasses="!bg-[#6C5CE7] text-white shadow-[0_0_35px_rgba(108,92,231,0.35)] hover:!bg-[#7A6FF2]"
+            containerClassName="w-full"
+          />
+        </motion.div>
+
+        <AnimatePresence>
+          {showConfetti && (
+            <motion.div
+              key="confetti"
+              className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Lottie options={confettiOptions} height={260} width={320} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
 export const BentoGridItem = ({
   className,
   id,
   title,
   description,
-  //   remove unecessary things here
   img,
   imgClassName,
   titleClassName,
   spareImg,
-}: {
-  className?: string;
-  id: number;
-  title?: string | React.ReactNode;
-  description?: string | React.ReactNode;
-  img?: string;
-  imgClassName?: string;
-  titleClassName?: string;
-  spareImg?: string;
-}) => {
-  const leftLists = ["ReactJS", "Express", "Typescript"];
-  const rightLists = ["VueJS", "NuxtJS", "GraphQL"];
+}: BentoGridItemProps) => {
+  const containerClasses = cn(
+    "row-span-1 relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/[0.08] bg-[#080C1A] group/bento transition-shadow duration-300 hover:shadow-[0_20px_45px_rgba(15,19,45,0.45)]",
+    className
+  );
 
-  const [copied, setCopied] = useState(false);
-
-  const defaultOptions = {
-    loop: copied,
-    autoplay: copied,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
-  const handleCopy = () => {
-    if (typeof navigator === "undefined" || !navigator.clipboard) {
-      return;
-    }
-    const text = "ask@codecompas.com";
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-  };
+  if (id === 6) {
+    return (
+      <div className={containerClasses}>
+        <ContactCard title={title} />
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={cn(
-        // remove p-4 rounded-3xl dark:bg-black dark:border-white/[0.2] bg-white  border border-transparent, add border border-white/[0.1] overflow-hidden relative
-        "row-span-1 relative overflow-hidden rounded-3xl border border-white/[0.1] group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none justify-between flex flex-col space-y-4",
-        className
-      )}
-      style={{
-        //   add these two
-        //   you can generate the color from here https://cssgradient.io/
-        background: "rgb(4,7,29)",
-        backgroundColor:
-          "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
-      }}
-    >
-      {/* add img divs */}
-      <div className={`${id === 6 && "flex justify-center"} h-full`}>
-        <div className="w-full h-full absolute">
-          {img && (
+    <div className={containerClasses}>
+      <div className="relative flex h-full flex-col">
+        {img && (
+          <div className="absolute inset-0">
             <img
               src={img}
-              alt={img}
-              className={cn(imgClassName, "object-cover object-center ")}
+              alt=""
+              className={cn(
+                "h-full w-full object-cover object-center",
+                imgClassName
+              )}
             />
-          )}
-        </div>
-        <div
-          className={`absolute right-0 -bottom-5 ${
-            id === 5 && "w-full opacity-80"
-          } `}
-        >
-          {spareImg && (
+            <div className="absolute inset-0 bg-gradient-to-t from-[#080C1A] via-[#080C1A]/70 to-transparent" />
+          </div>
+        )}
+
+        {spareImg && (
+          <div
+            className={cn(
+              "absolute right-0 -bottom-5",
+              id === 5 ? "w-full opacity-80" : "w-40"
+            )}
+          >
             <img
               src={spareImg}
-              alt={spareImg}
-              //   width={220}
-              className="object-cover object-center w-full h-full"
+              alt=""
+              className="h-full w-full object-cover object-center"
             />
-          )}
-        </div>
-        {id === 6 && (
-          // add background animation , remove the p tag
-          <BackgroundGradientAnimation>
-            <div className="absolute z-50 inset-0 flex items-center justify-center text-white font-bold px-4 pointer-events-none text-3xl text-center md:text-4xl lg:text-7xl"></div>
-          </BackgroundGradientAnimation>
+          </div>
         )}
 
         <div
           className={cn(
-            titleClassName,
-            "group-hover/bento:translate-x-2 transition duration-200 relative md:h-full min-h-40 flex flex-col px-5 p-5 lg:p-10"
+            "relative z-10 flex min-h-40 flex-col gap-3 px-6 py-8 transition-transform duration-300 ease-out group-hover/bento:translate-x-2 lg:px-10 lg:py-12",
+            titleClassName
           )}
         >
-          {/* change the order of the title and des, font-extralight, remove text-xs text-neutral-600 dark:text-neutral-300 , change the text-color */}
-          <div className="font-sans font-extralight md:max-w-32 md:text-xs lg:text-base text-sm text-[#C1C2D3] z-10">
-            {description}
-          </div>
-          {/* add text-3xl max-w-96 , remove text-neutral-600 dark:text-neutral-300*/}
-          {/* remove mb-2 mt-2 */}
-          <div
-            className={`font-sans text-lg lg:text-3xl max-w-96 font-bold z-10`}
-          >
-            {title}
-          </div>
-
-          {id === 3 && (
-            <div className="flex gap-1 lg:gap-5 w-fit absolute -right-3 lg:-right-2">
-              {/* left side empty */}
-              <div className="flex flex-col gap-3 md:gap-3 lg:gap-8"></div>
-              {/* right side empty */}
-              <div className="flex flex-col gap-3 md:gap-3 lg:gap-8"></div>
+          {description && (
+            <div className="font-sans text-sm font-extralight text-[#C1C2D3] md:max-w-32 md:text-xs lg:text-base">
+              {description}
             </div>
           )}
-          {id === 6 && (
-            <div className="mt-5 relative">
-              {/* button border magic from tailwind css buttons  */}
-              {/* add rounded-md h-8 md:h-8, remove rounded-full */}
-              {/* remove focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 */}
-              {/* add handleCopy() for the copy the text */}
-              <div
-                className={`absolute -bottom-5 right-0 ${
-                  copied ? "block" : "block"
-                }`}
-              >
-                {/* <img src="/confetti.gif" alt="confetti" /> */}
-                <Lottie options={defaultOptions} height={200} width={400} />
-              </div>
-
-              <MagicButton
-                title={copied ? "Email is Copied!" : "Copy our email address"}
-                icon={<IoCopyOutline />}
-                position="left"
-                handleClick={handleCopy}
-                otherClasses="!bg-[#161A31]"
-              />
+          {title && (
+            <div className="font-sans text-lg font-bold text-white lg:text-3xl">
+              {title}
             </div>
           )}
         </div>
