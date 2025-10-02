@@ -35,7 +35,7 @@ export const gridItems = [
   },
   {
     id: 6,
-    title: "Book a free call to discuss custom projects 📞",
+    title: "Contact us for a free quote 📝",
     description: "",
     className: "lg:col-span-2 md:col-span-3 md:row-span-1",
     imgClassName: "",
