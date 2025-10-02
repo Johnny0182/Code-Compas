@@ -102,8 +102,6 @@ const Services = () => {
   });
   const [messageIndex, setMessageIndex] = useState(0);
   const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
-  const [showStickyCTA, setShowStickyCTA] = useState(false);
-  const [stickyRipple, setStickyRipple] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -134,7 +132,6 @@ const Services = () => {
       const doc = document.documentElement;
       const scrollable = doc.scrollHeight - window.innerHeight;
       const progress = scrollable <= 0 ? 1 : window.scrollY / scrollable;
-      setShowStickyCTA(progress > 0.3);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -240,21 +237,6 @@ const Services = () => {
     const { currentTarget } = event;
     currentTarget.style.setProperty("--x", "50%");
     currentTarget.style.setProperty("--y", "50%");
-  };
-
-  const handleStickyCTA = () => {
-    if (typeof window === "undefined" || typeof document === "undefined")
-      return;
-    setStickyRipple(true);
-    window.setTimeout(() => setStickyRipple(false), 400);
-    const contactSection = document.getElementById("contact");
-    contactSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => {
-      const emailInput = contactSection?.querySelector(
-        "input[name='email']"
-      ) as HTMLInputElement | null;
-      emailInput?.focus();
-    }, 600);
   };
 
   return (
