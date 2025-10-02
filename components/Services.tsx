@@ -6,7 +6,14 @@ import type {
   PointerEvent as ReactPointerEvent,
   PointerEventHandler,
 } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const offerings = [
   {
@@ -91,6 +98,27 @@ const microcopyMessages = [
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
+const processSlides = [
+  {
+    title: "1. Planning & Approval",
+    description:
+      "Every project starts with a planning stage where we map out features, lock in pricing, and get your approval on design direction before we write a single line of code.",
+    icon: "📋",
+  },
+  {
+    title: "2. Bilingual Execution",
+    description:
+      "You get native bilingual execution (English & Español), hands-on training for your team, and regular meetings to keep things moving forward.",
+    icon: "🌐",
+  },
+  {
+    title: "3. Launch & Beyond",
+    description:
+      "Code Compas has you covered from first meeting to final launch and beyond—with a dedicated project lead keeping you in the loop every step.",
+    icon: "🚀",
+  },
+];
+
 const Services = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -105,7 +133,9 @@ const Services = () => {
   const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 });
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const [stickyRipple, setStickyRipple] = useState(false);
-  const [processReveal, setProcessReveal] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isCarouselHovered, setIsCarouselHovered] = useState(false);
+  const autoAdvanceRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -220,41 +250,80 @@ const Services = () => {
     setTilt((prev) => ({ ...prev, rotateX: 0, rotateY: 0 }));
   };
 
-  const handleProcessPointerEnter = (
-    event: ReactPointerEvent<HTMLDivElement>
-  ) => {
-    if (event.pointerType === "touch") return;
-    setProcessReveal(true);
-  };
-
-  const handleProcessPointerLeave = (
-    event: ReactPointerEvent<HTMLDivElement>
-  ) => {
-    if (event.pointerType === "touch") return;
-    setProcessReveal(false);
-  };
-
-  const handleProcessFocus = () => {
-    setProcessReveal(true);
-  };
-
-  const handleProcessBlur = () => {
-    setProcessReveal(false);
-  };
-
-  const handleProcessKeyDown = (
-    event: ReactKeyboardEvent<HTMLDivElement>
-  ) => {
-    if (event.key === " " || event.key === "Enter") {
-      event.preventDefault();
-      setProcessReveal((prev) => !prev);
+  const clearAutoAdvance = useCallback(() => {
+    if (autoAdvanceRef.current && typeof window !== "undefined") {
+      window.clearTimeout(autoAdvanceRef.current);
     }
+    autoAdvanceRef.current = null;
+  }, []);
 
-    if (event.key === "Escape") {
-      setProcessReveal(false);
-      event.currentTarget.blur();
-    }
-  };
+  const scheduleAutoAdvance = useCallback(() => {
+    if (typeof window === "undefined") return;
+    autoAdvanceRef.current = window.setTimeout(() => {
+      setCurrentSlide((prev) => (prev + 1) % processSlides.length);
+    }, 5000);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    clearAutoAdvance();
+    if (isCarouselHovered) return;
+    scheduleAutoAdvance();
+    return clearAutoAdvance;
+  }, [clearAutoAdvance, scheduleAutoAdvance, currentSlide, isCarouselHovered]);
+
+  const goToSlide = useCallback((index: number) => {
+    setCurrentSlide((prev) => {
+      if (index === prev) return prev;
+      return (index + processSlides.length) % processSlides.length;
+    });
+  }, []);
+
+  const handleCarouselKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goToSlide((currentSlide + 1) % processSlides.length);
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goToSlide(
+          (currentSlide - 1 + processSlides.length) % processSlides.length
+        );
+      }
+    },
+    [currentSlide, goToSlide]
+  );
+
+  const handleCarouselPointerEnter = useCallback(() => {
+    setIsCarouselHovered(true);
+    clearAutoAdvance();
+  }, [clearAutoAdvance]);
+
+  const handleCarouselPointerLeave = useCallback(() => {
+    setIsCarouselHovered(false);
+  }, []);
+
+  const handleCarouselFocus = useCallback(() => {
+    setIsCarouselHovered(true);
+    clearAutoAdvance();
+  }, [clearAutoAdvance]);
+
+  const handleCarouselBlur = useCallback(() => {
+    setIsCarouselHovered(false);
+  }, []);
+
+  const handleManualNavigation = useCallback(
+    (nextIndex: number) => {
+      goToSlide(nextIndex);
+      if (typeof window !== "undefined") {
+        clearAutoAdvance();
+        scheduleAutoAdvance();
+      }
+    },
+    [clearAutoAdvance, goToSlide, scheduleAutoAdvance]
+  );
 
   const handleButtonPointerMove = (
     event: ReactPointerEvent<HTMLAnchorElement>
@@ -320,46 +389,120 @@ const Services = () => {
 
       <div className="relative z-10 mt-6 flex w-full justify-center px-6">
         <div
+          role="region"
+          aria-label="Code Compas process carousel"
           tabIndex={0}
-          aria-describedby="services-process-reveal"
-          aria-label="Code Compas services process details"
-          role="button"
-          aria-pressed={processReveal}
-          className="group/process relative w-full max-w-3xl focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple/60"
-          data-active={processReveal}
-          onPointerEnter={handleProcessPointerEnter}
-          onPointerLeave={handleProcessPointerLeave}
-          onFocus={handleProcessFocus}
-          onBlur={handleProcessBlur}
-          onKeyDown={handleProcessKeyDown}
+          className="group/carousel relative w-full max-w-[600px] focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple/60"
+          onPointerEnter={handleCarouselPointerEnter}
+          onPointerLeave={handleCarouselPointerLeave}
+          onFocus={handleCarouselFocus}
+          onBlur={handleCarouselBlur}
+          onKeyDown={handleCarouselKeyDown}
         >
-          <div className="pointer-events-none absolute inset-0 -translate-y-4 rounded-[36px] bg-purple/20 blur-3xl opacity-40 transition-opacity duration-700 group-hover/process:opacity-80 group-focus-visible/process:opacity-80" aria-hidden="true" />
+          <div
+            className="pointer-events-none absolute inset-0 -translate-y-4 rounded-[36px] bg-purple/20 opacity-40 blur-3xl transition-opacity duration-700 group-hover/carousel:opacity-80 group-focus-visible/carousel:opacity-80"
+            aria-hidden="true"
+          />
           <div className="relative rounded-[32px] bg-gradient-to-r from-purple-500/70 via-blue-500/70 to-purple-500/70 p-[1px]">
-            <div
-              className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0e27]/80 px-8 py-10 text-center shadow-2xl shadow-purple-500/30 backdrop-blur-xl transition duration-300 group-hover/process:bg-[#0a0e27]/90 group-focus-visible/process:bg-[#0a0e27]/90 group-data-[active=true]/process:bg-[#0a0e27]/90"
-            >
+            <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0a0e27]/80 px-8 py-10 text-center shadow-2xl shadow-purple-500/30 backdrop-blur-xl">
               <div className="pointer-events-none absolute inset-0">
-                <span aria-hidden="true" className="absolute -right-12 -top-14 h-36 w-36 rounded-full bg-purple/30 blur-3xl opacity-60 animate-first" />
-                <span aria-hidden="true" className="absolute -bottom-16 -left-12 h-32 w-32 rounded-full bg-blue-500/25 blur-3xl opacity-60 animate-second" />
-                <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent_60%)] opacity-40 transition-opacity duration-300 group-hover/process:opacity-60 group-focus-visible/process:opacity-60 group-data-[active=true]/process:opacity-60" />
-                <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.25),_rgba(255,255,255,0)_35%,_rgba(255,255,255,0)_65%,_rgba(255,255,255,0.35))] opacity-0 animate-[shimmer_8s_linear_infinite] group-hover/process:opacity-100 group-focus-visible/process:opacity-100 group-data-[active=true]/process:opacity-100" />
+                <span
+                  aria-hidden="true"
+                  className="absolute -right-12 -top-14 h-36 w-36 rounded-full bg-purple/30 opacity-60 blur-3xl animate-first"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute -bottom-16 -left-12 h-32 w-32 rounded-full bg-blue-500/25 opacity-60 blur-3xl animate-second"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.25),_transparent_60%)] opacity-40"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(255,255,255,0.25),_rgba(255,255,255,0)_35%,_rgba(255,255,255,0)_65%,_rgba(255,255,255,0.35))] opacity-0 animate-[shimmer_8s_linear_infinite]"
+                />
               </div>
 
               <div className="relative z-10 flex flex-col items-center gap-6 text-white">
-                <div className="flex flex-col items-center gap-3 transform-gpu transition duration-300 group-hover/process:opacity-0 group-hover/process:translate-y-[-12px] group-focus-visible/process:opacity-0 group-focus-visible/process:translate-y-[-12px] group-data-[active=true]/process:opacity-0 group-data-[active=true]/process:translate-y-[-12px]">
-                  <span aria-hidden="true" className="text-4xl drop-shadow">✨</span>
-                  <p className="text-lg font-semibold tracking-wide text-white/80">
-                    Hover to reveal our process
-                  </p>
+                <div className="flex items-center justify-between w-full text-xs uppercase tracking-[0.32em] text-white/50">
+                  <span>Our process</span>
+                  <span>{`${currentSlide + 1}/${processSlides.length}`}</span>
                 </div>
 
-                <p
-                  id="services-process-reveal"
-                  className="-translate-y-3 text-sm leading-relaxed text-white/80 opacity-0 transition duration-300 group-hover/process:translate-y-0 group-hover/process:opacity-100 group-focus-visible/process:translate-y-0 group-focus-visible/process:opacity-100 group-data-[active=true]/process:translate-y-0 group-data-[active=true]/process:opacity-100 md:text-base transform-gpu"
-                >
-                  Choose your platform for a complete digital solution tailored for your business workflows. Every project starts with a planning stage where we map out features, lock in pricing, and get your approval on design direction. You also get bilingual execution, hands-on training, regular meetings to keep things moving, and a dedicated project lead. Code Compas has you covered from first meeting to final launch, and beyond 🚀🤠
-                </p>
-                <span className="sr-only">Focus or hover this card to read the full process description.</span>
+                <div className="relative w-full min-h-[180px]">
+                  <AnimatePresence mode="wait">
+                    <motion.article
+                      key={currentSlide}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="flex h-full flex-col items-center gap-4"
+                    >
+                      <span className="text-4xl drop-shadow">{
+                        processSlides[currentSlide].icon
+                      }</span>
+                      <h3 className="text-2xl font-semibold md:text-[28px]">
+                        {processSlides[currentSlide].title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-white/80 md:text-base">
+                        {processSlides[currentSlide].description}
+                      </p>
+                    </motion.article>
+                  </AnimatePresence>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleManualNavigation(
+                        (currentSlide - 1 + processSlides.length) %
+                          processSlides.length
+                      )
+                    }
+                    aria-label="Show previous step"
+                    className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lg text-white/80 opacity-0 transition hover:border-purple/50 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-purple/70 focus:opacity-100 focus:pointer-events-auto pointer-events-none group-hover/carousel:pointer-events-auto group-hover/carousel:opacity-100 group-focus-visible/carousel:pointer-events-auto group-focus-visible/carousel:opacity-100"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleManualNavigation(
+                        (currentSlide + 1) % processSlides.length
+                      )
+                    }
+                    aria-label="Show next step"
+                    className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/40 text-lg text-white/80 opacity-0 transition hover:border-purple/50 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-purple/70 focus:opacity-100 focus:pointer-events-auto pointer-events-none group-hover/carousel:pointer-events-auto group-hover/carousel:opacity-100 group-focus-visible/carousel:pointer-events-auto group-focus-visible/carousel:opacity-100"
+                  >
+                    ›
+                  </button>
+                </div>
+
+                <div className="mt-8 flex items-center justify-center gap-2">
+                  {processSlides.map((_, index) => (
+                    <button
+                      key={`process-dot-${index}`}
+                      type="button"
+                      aria-label={`Show slide ${index + 1}`}
+                      aria-pressed={index === currentSlide}
+                      onClick={() => handleManualNavigation(index)}
+                      className="h-2.5 w-2.5 rounded-full border border-white/20 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-purple/70"
+                      style={{
+                        backgroundColor:
+                          index === currentSlide
+                            ? "rgba(138, 96, 255, 0.9)"
+                            : "rgba(255, 255, 255, 0.18)",
+                      }}
+                    />
+                  ))}
+                </div>
+
+                <span className="sr-only" aria-live="polite">
+                  {processSlides[currentSlide].title}: {
+                    processSlides[currentSlide].description
+                  }
+                </span>
               </div>
             </div>
           </div>
