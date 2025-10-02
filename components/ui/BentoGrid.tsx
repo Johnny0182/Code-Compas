@@ -14,8 +14,6 @@ import Lottie from "react-lottie";
 import { cn } from "@/lib/utils";
 
 import animationData from "@/data/confetti.json";
-import MagicButton from "../MagicButton";
-
 type BentoGridProps = {
   className?: string;
   children?: React.ReactNode;
@@ -50,7 +48,11 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [mode, setMode] = useState<"repel" | "attract">("repel");
   const [escapeCount, setEscapeCount] = useState(0);
+  const [dodgeThreshold, setDodgeThreshold] = useState(() =>
+    Math.random() > 0.5 ? 2 : 3
+  );
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const arenaRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLDivElement | null>(null);
@@ -155,14 +157,15 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (escapeCount >= 3 && mode === "repel") {
+    if (escapeCount >= dodgeThreshold && mode === "repel") {
       setMode("attract");
     }
-  }, [escapeCount, mode]);
+  }, [dodgeThreshold, escapeCount, mode]);
 
   const handleMouseEnter = useCallback(() => {
     setMode("repel");
     setEscapeCount(0);
+    setDodgeThreshold(Math.random() > 0.5 ? 2 : 3);
     lastRepelRef.current = performance.now();
     if (!isCopied) {
       moveButton(0, 0);
@@ -262,6 +265,7 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
 
     setIsCopied(true);
     setShowConfetti(true);
+    setShowToast(true);
     setMode("repel");
     setEscapeCount(0);
     moveButton(0, 0, { immediate: true });
@@ -279,6 +283,7 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
     resetTimeoutRef.current = setTimeout(() => {
       setIsCopied(false);
       setShowConfetti(false);
+      setShowToast(false);
       setMode("repel");
       setEscapeCount(0);
       moveButton(0, 0);
@@ -317,20 +322,29 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
           <div className="h-16 w-40 rounded-full bg-[radial-gradient(circle_at_center,_rgba(108,92,231,0.35)_0%,_rgba(108,92,231,0)_70%)] blur-xl" />
         </motion.div>
 
-        <motion.div
+        <motion.button
           ref={buttonRef}
-          className="absolute left-1/2 top-1/2 w-full max-w-[220px] -translate-x-1/2 -translate-y-1/2"
+          type="button"
+          onClick={handleCopy}
+          className={cn(
+            "absolute left-1/2 top-1/2 flex w-full max-w-[230px] -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-2 rounded-full",
+            "bg-gradient-to-r from-[#9A8CFF] via-[#7C6BFF] to-[#6C5CE7] px-6 py-3 text-sm font-semibold text-white shadow-[0_20px_45px_rgba(108,92,231,0.35)] transition-[box-shadow] duration-300",
+            "hover:shadow-[0_28px_60px_rgba(108,92,231,0.45)] focus:outline-none"
+          )}
           style={{ x, y, rotate, scale }}
         >
-          <MagicButton
-            title={isCopied ? "Email copied!" : "Copy our email address"}
-            icon={<IoCopyOutline />}
-            position="left"
-            handleClick={handleCopy}
-            otherClasses="!bg-[#6C5CE7] text-white shadow-[0_0_35px_rgba(108,92,231,0.35)] hover:!bg-[#7A6FF2]"
-            containerClassName="w-full"
-          />
-        </motion.div>
+          <motion.span
+            initial={false}
+            animate={{ rotate: isCopied ? -6 : 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 backdrop-blur"
+          >
+            <IoCopyOutline className="h-4 w-4" />
+          </motion.span>
+          <span className="pointer-events-none select-none text-center">
+            {isCopied ? "Email copied!" : "Copy our email address"}
+          </span>
+        </motion.button>
 
         <AnimatePresence>
           {showConfetti && (
@@ -342,6 +356,20 @@ const ContactCard = ({ title }: { title?: ReactNode }) => {
               exit={{ opacity: 0 }}
             >
               <Lottie options={confettiOptions} height={260} width={320} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showToast && (
+            <motion.div
+              key="toast"
+              className="pointer-events-none absolute bottom-4 left-1/2 w-[calc(100%-2rem)] max-w-xs -translate-x-1/2 rounded-2xl bg-white/10 px-4 py-3 text-center text-xs font-medium text-white backdrop-blur"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+            >
+              Email copied to clipboard
             </motion.div>
           )}
         </AnimatePresence>
